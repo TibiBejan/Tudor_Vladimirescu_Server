@@ -30,11 +30,11 @@ module.exports = {
     host: process.env.PROD_DB_HOSTNAME,
     port: process.env.PROD_DB_PORT,
     dialect: 'mysql',
-    dialectOptions: {
-      bigNumberStrings: true,
-      ssl: {
-        ca: fs.readFileSync(__dirname + '/mysql-ca-main.crt')
-      }
-    }
+    // dialectOptions: {
+    //   bigNumberStrings: true,
+    //   ssl: {
+    //     ca: fs.readFileSync(__dirname + '/mysql-ca-main.crt')
+    //   }
+    // }
   }
 };
