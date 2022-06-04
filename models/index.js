@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import dbVariables from '../config/db.config.js';
+import dbVariables from '../config/config.js';
 import envVariables from '../constants/index';
 
 const basename = path.basename(__filename);

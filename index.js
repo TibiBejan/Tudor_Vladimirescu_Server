@@ -17,7 +17,7 @@ app.listen(port, async () => {
     console.log(`Server App running on ${envVars.env} mode with port ${port || '3001'}...`);
     try {
         // await sequelize.authenticate();
-        await sequelize.sync({ force: true })
+        await sequelize.sync()
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
