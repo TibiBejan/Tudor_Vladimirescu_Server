@@ -5,6 +5,7 @@ import envVars from './constants/index.js';
 // import sequelize from './config/db.config.js';
 
 // =================== DB Init =================== //
+
 const sequelize = new Sequelize(envVars.MYSQL_DB_NAME, envVars.MYSQL_USER, envVars.MYSQL_PWD, {
     host: envVars.MYSQL_HOST,
     dialect: 'mysql',
