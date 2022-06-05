@@ -50,27 +50,24 @@ export const createRelatives = async (req, res, next) => {
     const { first_name, last_name, email, relation, adress, phone_number } = req.body;
     try {
         const definedRelation = await Relatives.findOne({ where: { userId: req.user.id, relation: relation}});
-        console.log(req.user.id);
 
-        // console.log(definedRelation)
-        // if(definedRelation) {
-        //     return next(new AppError("This relative relation is already defined, please add a new one.", 500));
-        // }
-
-        // const newRelatives = await Relatives.create({
-        //     first_name,
-        //     last_name,
-        //     email,
-        //     relation,
-        //     adress,
-        //     phone_number,
-        //     userId: req.user.id
-        // });
-        // return res.status(201).json({
-        //     status: "success",
-        //     message: "Relative created!",
-        //     kin: newRelatives
-        // });
+        if(definedRelation) {
+            return next(new AppError("This relative relation is already defined, please add a new one.", 500));
+        }
+        const newRelatives = await Relatives.create({
+            first_name,
+            last_name,
+            email,
+            relation,
+            adress,
+            phone_number,
+            userId: req.user.id
+        });
+        return res.status(201).json({
+            status: "success",
+            message: "Relative created!",
+            kin: newRelatives
+        });
     }
     catch(err) {
         return res.status(500).json({
