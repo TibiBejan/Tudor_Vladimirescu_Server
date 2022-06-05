@@ -200,6 +200,29 @@ export const deleteEnrollment = async (req, res, next) => {
 }
 
 export const allocateStudent = async (req, res, next) => {
+    // Check for student meta updated
+    const studentMetaExists = await StudentMeta.findOne({where: {userId: req.user.id}});
+    if(!studentMetaExists) {
+        return next(new AppError("In order to be allocated, you must update your student informations.", 404));
+    }
+    // Check for student relatives
+    const studentKinsExists = await Relatives.findAll({where: {id: req.user.id}});
+    if(!studentKinsExists) {
+        return next(new AppError("In order to be allocated, you must update your student informations.", 404));
+    }
+    // Check if student is enrolled
+    const enrollment = await Enrollment.findOne({where: {userId: req.user.id}});
+    if(!enrollment) {
+        return next(new AppError("In order to be allocated, you must enroll.", 404));
+    }
+    // Get all university halls based enrollment university id
+    const {halls} = await University.findOne({
+        where: { id: enrollment.universityId },
+        attributes:['halls']
+    });
+
+    console.log(halls)
+
     return res.status(204).json({
         status: "success",
         message: "Student has been allocated!"
