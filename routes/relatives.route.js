@@ -12,7 +12,7 @@ relativesRouter.use(protect);
 // =================== Routes =================== //
 relativesRouter.get('/all', getAllRelatives);
 relativesRouter.get('/:id', getRelativesById);
-relativesRouter.post('', createRelativesSchema, validateRequest, createRelatives);
+relativesRouter.post('/', createRelativesSchema, validateRequest, createRelatives);
 relativesRouter.patch('/:id', updateRelativesSchema, validateRequest, updateRelatives);
 relativesRouter.delete('/:id', deleteRelatives);
 

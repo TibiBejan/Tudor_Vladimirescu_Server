@@ -18,7 +18,11 @@ export const signUp = async (req, res, next) => {
         const existedUser = await User.findOne({where: { email: email }});
 
         if(existedUser) {
-            return next(new AppError("This e-mail is already taken, please log in...", httpStatus[500]));
+            return res.status(500).json({
+                status: httpStatus[500],
+                message: "E-mail is already taken, please try again with another one",
+                err: process.env.NODE_ENV === 'development' ? err : null
+            });
         }
         // HASH PASSWORD
         const salt = await bcrypt.genSalt(12);
