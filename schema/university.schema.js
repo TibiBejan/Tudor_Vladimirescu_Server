@@ -18,9 +18,9 @@ export const createUniversitySchema = [
         .withMessage('Rector name is not valid'),
     body('halls')
         .exists()
-        .withMessage('Halls are required'),
-        // .isArray()
-        // .withMessage('Halls must be of type array and contain only alphabetical characters'),
+        .withMessage('Halls are required')
+        .isArray()
+        .withMessage('Halls must be of type array and contain only alphabetical characters'),
     body('phone_number')
         .exists()
         .withMessage('Phone Number is required')

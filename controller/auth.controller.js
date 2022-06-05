@@ -21,7 +21,6 @@ export const signUp = async (req, res, next) => {
             return res.status(500).json({
                 status: httpStatus[500],
                 message: "E-mail is already taken, please try again with another one",
-                err: process.env.NODE_ENV === 'development' ? err : null
             });
         }
         // HASH PASSWORD
