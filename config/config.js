@@ -24,7 +24,7 @@ module.exports = {
     }
   },
   production: {
-    use_env_variable: process.env,
+    use_env_variable: process.env.JAWSDB_URL,
     dialect: 'mysql',
     dialectOptions: {
       bigNumberStrings: true,
