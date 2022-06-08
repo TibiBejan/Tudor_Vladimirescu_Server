@@ -13,7 +13,7 @@ export const getStudentMeta = async (req, res, next) => {
         }
         return res.status(200).json({
             status: "success",
-            studentMeta: studentMeta
+            data: studentMeta
         });
     }
     catch(err) {
@@ -47,7 +47,7 @@ export const createStudentMeta = async (req, res, next) => {
         return res.status(201).json({
             status: "success",
             message: "Student meta information created!",
-            studentMeta: studentMeta
+            data: studentMeta
         });
     }
     catch(err) {
@@ -64,7 +64,6 @@ export const updateStudentMeta = async (req, res, next) => {
         const filteredBody = filterObjectEntries(req.body, 'username', 'dob', 'gsender', 'nationality', 'phone_number', 'street_adress', 'city', 'state', 'country', 'zip_code');
         // FIND THE USER AND UPDATE INFO
         const currentStudentMeta = await StudentMeta.findOne({where: { id: req.params.id }});
-        console.log(currentStudentMeta)
         if(!currentStudentMeta) {
             return next(new AppError("This meta information can not be updated, please try again.", 400));
         }
@@ -74,7 +73,7 @@ export const updateStudentMeta = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "Student meta information has been updated!",
-            studentMeta: updatedStudentMeta
+            data: updatedStudentMeta
         });
     }
     catch(err) {

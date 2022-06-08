@@ -24,7 +24,7 @@ export const createUniversity = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "University has been created!",
-            enrollment: newUniversity
+            data: newUniversity
         });
     }
     catch(err) {
@@ -37,7 +37,7 @@ export const createUniversity = async (req, res, next) => {
 
 export const updateUniversity = async (req, res, next) => {
     try {
-        let alreadyExists = false;
+        // let alreadyExists = false;
         const currentUniversity = await University.findOne({ 
             where: { keyword: req.params.keyword },
         });
@@ -63,7 +63,7 @@ export const updateUniversity = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "University has been updated!",
-            kin: updatedUniversity
+            data: updatedUniversity
         });
     }
     catch(err) {
@@ -109,7 +109,7 @@ export const getUniversities = async (req, res, next) => {
 
         return res.status(200).json({
             status: "success",
-            universities
+            data: universities
         });
     }
     catch(err) {
@@ -132,7 +132,7 @@ export const getUniversityById = async (req, res, next) => {
 
         return res.status(200).json({
             status: "success",
-            university
+            data: university
         });
     }
     catch(err) {

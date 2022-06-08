@@ -9,7 +9,6 @@ import errorController from '../controller/error.controller.js';
 
 // =================== Routes Imports =================== //
 import routes from '../routes/index.js';
-
 // =================== App Init =================== //
 const app = express()
 

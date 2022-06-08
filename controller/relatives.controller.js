@@ -16,7 +16,7 @@ export const getAllRelatives = async (req, res, next) => {
         return res.status(200).json({
             status: "success",
             results: relatives.length,
-            kins: relatives
+            data: relatives
         });
     }
     catch(err) {
@@ -35,7 +35,7 @@ export const getRelativesById = async (req, res, next) => {
         }
         return res.status(200).json({
             status: "success",
-            relative
+            data: relative
         });
     }
     catch(err) {
@@ -66,7 +66,7 @@ export const createRelatives = async (req, res, next) => {
         return res.status(201).json({
             status: "success",
             message: "Relative created!",
-            kin: newRelatives
+            data: newRelatives
         });
     }
     catch(err) {
@@ -77,7 +77,7 @@ export const createRelatives = async (req, res, next) => {
     }
 }
 
-export const updateRelatives = async (req, res, _) => {
+export const updateRelatives = async (req, res, next) => {
     try{
         // FILTER BODY AND UPDATE SPECIFIC FIELDS
         const filteredBody = filterObjectEntries(req.body, 'first_name', 'last_name', 'email', 'relation', 'adress', 'phone_number');
@@ -89,7 +89,7 @@ export const updateRelatives = async (req, res, _) => {
         return res.status(200).json({
             status: "Success",
             message: "Kin has been updated!",
-            kin: updatedRelatives
+            data: updatedRelatives
         });
     }
     catch(err) {

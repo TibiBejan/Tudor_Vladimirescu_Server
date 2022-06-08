@@ -16,12 +16,12 @@ export const getAccommodatedUser = async (req, res, next) => {
                 {
                     model: HallRoom,
                     where: { userId: req.user.id },
-                    attributes: ['room_number', 'room_floor', 'room_rent', 'room_beds']
+                    attributes: ['number', 'floor', 'rent_per_month', 'beds_number']
                 },
                 {
                     model: Hall,
                     where: { id: req.user.hallId },
-                    attributes: ['hall_name', 'rooms_number', 'students_number', 'student_per_room', 'min_grade', 'max_grade']
+                    attributes: ['hall_name', 'total_rooms', 'total_students', 'students_in_room', 'min_grade', 'max_grade']
                 }
             ]
         });
@@ -33,7 +33,7 @@ export const getAccommodatedUser = async (req, res, next) => {
         const currentStudentNeighbors = await HallRoom.findAll({
             where: {
                 hallId: currentStudent.hallId,
-                room_number: currentStudent.HallRoom.room_number
+                room_number: currentStudent.HallRoom.number
             },
             attributes: ['userId'],
         });
@@ -52,7 +52,7 @@ export const getAccommodatedUser = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "Accommodated student fetched!",
-            accommodatedUser: {
+            data: {
                 student: currentStudent,
                 neighbors: fetchedNeighbors
             }

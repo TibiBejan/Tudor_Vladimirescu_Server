@@ -25,7 +25,7 @@ export const updateProfile = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "User has been updated!",
-            user: user
+            data: user
         });
     }
     catch(err) {
@@ -113,7 +113,7 @@ export const createEnrollment = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "Enrollment has been created!",
-            enrollment: newEnrollment
+            data: newEnrollment
         });
     }
     catch(err) {
@@ -134,7 +134,7 @@ export const getEnrollment = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "Enrollment found!",
-            enrollment: currentEnrollment
+            data: currentEnrollment
         });
     }
     catch(err) {
@@ -167,7 +167,7 @@ export const updateEnrollemnt = async (req, res, next) => {
         return res.status(200).json({
             status: "Success",
             message: "Enrollment has been updated!",
-            enrollment: currentEnrollment
+            data: currentEnrollment
         });
     }
     catch(err) {

@@ -11,7 +11,6 @@ config();
 // Extract models from db export
 const { User, Token } = dbModels;
 
-
 export const signUp = async (req, res, next) => {
     try {
         let { first_name, last_name, email, password } = req.body;
