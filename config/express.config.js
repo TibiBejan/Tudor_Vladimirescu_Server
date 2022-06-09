@@ -13,7 +13,7 @@ import routes from '../routes/index.js';
 const app = express()
 
 // =================== Global Middlewares =================== //
-var whitelist = ['https://tudor-vladimirescu.netlify.app/', 'http://localhost:3000']
+var whitelist = ['https://tudor-vladimirescu.netlify.app', 'http://localhost:3000', '*']
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
