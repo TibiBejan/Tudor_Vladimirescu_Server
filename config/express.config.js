@@ -17,7 +17,7 @@ const app = express()
 //     'Access-Control-Allow-Origin': '*',
 // }
   
-app.use(cors());
+// app.use(cors());
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json())
