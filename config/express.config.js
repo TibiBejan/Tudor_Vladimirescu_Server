@@ -14,12 +14,10 @@ const app = express()
 
 // =================== Global Middlewares =================== //
 var corsOptions = {
-    'Access-Control-Allow-Credentials': true,
-    // 'Access-Control-Allow-Origin': ['https://tudor-vladimirescu.netlify.app', 'http://localhost'],
     'Access-Control-Allow-Origin': '*',
 }
   
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(cookieParser());
 app.use(bodyParser.json())
