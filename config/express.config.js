@@ -13,18 +13,14 @@ import routes from '../routes/index.js';
 const app = express()
 
 // =================== Global Middlewares =================== //
-// var corsOptions = {
-//     'Access-Control-Allow-Credentials': true,
-//     'Access-Control-Allow-Origin': 'http://localhost:3000',
-//     // "origin": ['http://127.0.0.1'], // , 'http://127.0.0.1:3000'
-//     // "Access-Control-Allow-Origin": '127.0.0.1',
-//     // "CORS_ALLOW_CREDENTIALS": true
-// }
+var corsOptions = {
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Origin': 'https://tudor-vladimirescu.netlify.app',
+}
   
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(cookieParser());
-// app.use(express.json());
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('combined'));
