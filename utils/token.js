@@ -23,7 +23,7 @@ const createToken = (user, statusCode, message, res) => {
     });
 
     return res.status(statusCode).json({
-        status: httpStatus['200_MESSAGE'],
+        status: 200,
         message: message,
         jwtToken: token,
         data: user
