@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
-import envVars from '../constants';
-// import {config} from 'dotenv';
-// config();
+import envVars from '../constants';S
 
 // GENERATE JWT TOKEN
 const signToken = (id) => {
@@ -18,8 +16,6 @@ const createToken = (user, statusCode, message, res) => {
     res.cookie('jwt', token, {
         httpOnly: true,
         expires: new Date(Date.now() + process.env.JWT_EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000),
-        // secure: process.env.NODE_ENV === 'production' ? true : false,
-        // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
         secure: envVars.env === 'production' ? true : false,
         sameSite: envVars.env === 'production' ? 'None' : 'Lax'
     });
@@ -27,8 +23,10 @@ const createToken = (user, statusCode, message, res) => {
     return res.status(statusCode).json({
         status: 200,
         message: message,
-        jwtToken: token,
-        data: user
+        data: {
+            ...user,
+            token: token
+        }
     });
 }
 
