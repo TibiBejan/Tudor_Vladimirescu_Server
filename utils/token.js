@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import envVars from '../constants';S
+import envVars from '../constants';
 
 // GENERATE JWT TOKEN
 const signToken = (id) => {
