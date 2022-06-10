@@ -24,7 +24,7 @@ const createToken = (user, statusCode, message, res) => {
         status: 200,
         message: message,
         data: {
-            ...user,
+            user,
             token: token
         }
     });
