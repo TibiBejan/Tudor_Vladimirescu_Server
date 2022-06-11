@@ -82,6 +82,11 @@ export const checkLogin = async (req, res, next) => {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
         });
+
+        if(!tokenMatch) {
+            return next(new AppError("You are not logged in, your session expired", 401));
+        }
+
         // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
 
@@ -131,6 +136,10 @@ export const protect = async (req, res, next) => {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
         });
+
+        if(!tokenMatch) {
+            return next(new AppError("You are not logged in, your session expired", 401));
+        }
 
         // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
