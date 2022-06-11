@@ -79,10 +79,6 @@ export const checkLogin = async (req, res, next) => {
         }
         const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
-        }, (err, decode) => {
-            if(err) {
-                return next(new AppError("You are not logged in, your session expired", 401));
-            }
         });
 
         // CHECK IF USER STILL EXISTS
