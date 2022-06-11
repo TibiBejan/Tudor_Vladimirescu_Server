@@ -3,8 +3,8 @@ import envVars from '../constants';
 
 // GENERATE JWT TOKEN
 const signToken = (id) => {
-    return jwt.sign({ id: id }, process.env.JWT_SECRET_TOKEN, {
-        expiresIn: process.env.JWT_EXPIRES_DATE
+    return jwt.sign({ id: id }, envVars.JWT_SECRET_TOKEN, {
+        expiresIn: envVars.JWT_EXPIRES_DATE
     });
 }
 
@@ -15,7 +15,7 @@ const createToken = (user, statusCode, message, res) => {
     // GENERATE HTTP_ONLY COOCKIE FOR CLIENT SIDE
     res.cookie('jwt', token, {
         httpOnly: true,
-        expires: new Date(Date.now() + process.env.JWT_EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + envVars.JWT_EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000),
         secure: envVars.env === 'production' ? true : false,
         sameSite: envVars.env === 'production' ? 'None' : 'Lax'
     });
