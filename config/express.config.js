@@ -34,7 +34,7 @@ app.use((req, res, next) => {
       return res.status(200).json({});
     }
     next();
-});
+})
 
 // This middleware takes care of the origin when the origin is undefined. Origin is undefined when request is local
 app.use((req, _, next) => {
