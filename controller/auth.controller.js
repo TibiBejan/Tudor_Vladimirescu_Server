@@ -77,7 +77,9 @@ export const checkLogin = async (req, res, next) => {
         if(!req.cookies.jwt) {
             return next(new AppError("You are not logged in, please login to get access...", 401));
         }
-        const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+        const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, {
+            expiresIn: process.env.JWT_EXPIRES_DATE
+        }, (err, decode) => {
             if(err) {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
