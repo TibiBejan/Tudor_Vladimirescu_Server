@@ -79,6 +79,10 @@ export const checkLogin = async (req, res, next) => {
         }
         const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
+        }, (err, decode) => {
+            if(err) {
+                return next(new AppError("You are not logged in, your session expired", 401));
+            }
         });
 
         // CHECK IF USER STILL EXISTS
@@ -125,15 +129,13 @@ export const protect = async (req, res, next) => {
 
     // VALIDATE JWT TOKEN
     try{
-        const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+        const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {
+            expiresIn: process.env.JWT_EXPIRES_DATE
+        }, (err, decode) => {
             if(err) {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
         });
-
-        if(!tokenMatch) {
-            return next(new AppError("You are not logged in, your session expired", 401));
-        }
 
         // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
@@ -225,15 +227,13 @@ export const forgotPassword = async (req, res, next) => {
 export const resetPassword = async (req, res, next) => {
     // GET THE USER BASED ON TOKEN
     try {
-        const hashedToken = jwt.verify(req.params.token, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+        const hashedToken = jwt.verify(req.params.token, process.env.JWT_SECRET_TOKEN, {
+            expiresIn: process.env.JWT_EXPIRES_DATE
+        }, (err, decode) => {
             if(err) {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
         });
-
-        if(!hashedToken) {
-            return next(new AppError("You are not logged in, your session expired", 401));
-        }
 
         const user = await User.findOne({where: { id: hashedToken.id }});
         if(!user) {
