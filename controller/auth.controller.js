@@ -77,8 +77,10 @@ export const checkLogin = async (req, res, next) => {
         if(!req.cookies.jwt) {
             return next(new AppError("You are not logged in, please login to get access...", 401));
         }
-        const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, {
-            expiresIn: process.env.JWT_EXPIRES_DATE
+        const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+            if(err) {
+                return next(new AppError("You are not logged in, your session expired", 401));
+            }
         });
         // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
@@ -124,8 +126,10 @@ export const protect = async (req, res, next) => {
 
     // VALIDATE JWT TOKEN
     try{
-        const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {
-            expiresIn: process.env.JWT_EXPIRES_DATE
+        const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+            if(err) {
+                return next(new AppError("You are not logged in, your session expired", 401));
+            }
         });
 
         // CHECK IF USER STILL EXISTS
@@ -218,8 +222,10 @@ export const forgotPassword = async (req, res, next) => {
 export const resetPassword = async (req, res, next) => {
     // GET THE USER BASED ON TOKEN
     try {
-        const hashedToken = jwt.verify(req.params.token, process.env.JWT_SECRET_TOKEN, {
-            expiresIn: process.env.JWT_EXPIRES_PWD_TOKEN
+        const hashedToken = jwt.verify(req.params.token, process.env.JWT_SECRET_TOKEN, (err, decode) => {
+            if(err) {
+                return next(new AppError("You are not logged in, your session expired", 401));
+            }
         });
         const user = await User.findOne({where: { id: hashedToken.id }});
         if(!user) {
