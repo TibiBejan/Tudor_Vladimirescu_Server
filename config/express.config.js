@@ -28,13 +28,13 @@ app.all('/', function(req, res, next) {
     next();
 });
 
-app.use((req, res, next) => {
-    if (req.method === "OPTIONS") {
-      res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-      return res.status(200).json({});
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     if (req.method === "OPTIONS") {
+//       res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//       return res.status(200).json({});
+//     }
+//     next();
+// });
 
 // This middleware takes care of the origin when the origin is undefined. Origin is undefined when request is local
 app.use((req, _, next) => {
