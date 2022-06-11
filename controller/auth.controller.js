@@ -227,6 +227,11 @@ export const resetPassword = async (req, res, next) => {
                 return next(new AppError("You are not logged in, your session expired", 401));
             }
         });
+
+        if(!hashedToken) {
+            return next(new AppError("You are not logged in, your session expired", 401));
+        }
+
         const user = await User.findOne({where: { id: hashedToken.id }});
         if(!user) {
             return next(new AppError("Token is invalid or has expired...", 400));
