@@ -83,12 +83,8 @@ export const checkLogin = async (req, res, next) => {
             }
         });
 
-        if(!tokenMatch) {
-            return next(new AppError("You are not logged in, your session expired", 401));
-        }
-
         // CHECK IF USER STILL EXISTS
-        const user = await User.findOne({ where: { id: tokenMatch.id } });
+        const user = await User.findOne({ where: { id: tokenMatch?.id } });
 
         if(!user) {
             return next(new AppError("Session expired, please log in again.", 401));
