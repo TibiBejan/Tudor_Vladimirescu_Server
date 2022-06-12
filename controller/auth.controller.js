@@ -84,6 +84,11 @@ export const checkLogin = async (req, res, next) => {
         return next(new AppError("You are not logged in, please login to get access...", 401));
     }
 
+    return res.status(200).json({
+        status: 200,
+        data: tokenMatch
+    });
+
     // GET THE JWT TOKEN AND CHECK IT
     try {
         const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {

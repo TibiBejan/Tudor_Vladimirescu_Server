@@ -176,7 +176,8 @@ var login = function login(req, res, next) {
 exports.login = login;
 
 var checkLogin = function checkLogin(req, res, next) {
-  var token, tokenMatch;
+  var token, _tokenMatch;
+
   return regeneratorRuntime.async(function checkLogin$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -197,29 +198,25 @@ var checkLogin = function checkLogin(req, res, next) {
           return _context3.abrupt("return", next(new _appError["default"]("You are not logged in, please login to get access...", 401)));
 
         case 4:
-          _context3.prev = 4;
-          tokenMatch = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET_TOKEN, {
-            expiresIn: process.env.JWT_EXPIRES_DATE
-          });
           return _context3.abrupt("return", res.status(200).json({
             status: 200,
             data: tokenMatch
           }));
 
-        case 9:
-          _context3.prev = 9;
-          _context3.t0 = _context3["catch"](4);
+        case 10:
+          _context3.prev = 10;
+          _context3.t0 = _context3["catch"](5);
           return _context3.abrupt("return", res.status(500).json({
             status: "Bad request",
             message: "Invalid session, please log in again..."
           }));
 
-        case 12:
+        case 13:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[4, 9]]);
+  }, null, null, [[5, 10]]);
 };
 
 exports.checkLogin = checkLogin;
@@ -250,7 +247,8 @@ var logout = function logout(req, res, _) {
 exports.logout = logout;
 
 var protect = function protect(req, res, next) {
-  var token, tokenMatch, user, isChanged;
+  var token, _tokenMatch2, user, isChanged;
+
   return regeneratorRuntime.async(function protect$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
@@ -272,11 +270,11 @@ var protect = function protect(req, res, next) {
 
         case 4:
           _context5.prev = 4;
-          tokenMatch = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET_TOKEN, {
+          _tokenMatch2 = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
           });
 
-          if (tokenMatch) {
+          if (_tokenMatch2) {
             _context5.next = 8;
             break;
           }
@@ -287,7 +285,7 @@ var protect = function protect(req, res, next) {
           _context5.next = 10;
           return regeneratorRuntime.awrap(User.findOne({
             where: {
-              id: tokenMatch.id
+              id: _tokenMatch2.id
             }
           }));
 
@@ -303,7 +301,7 @@ var protect = function protect(req, res, next) {
 
         case 13:
           // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
-          isChanged = user.changedPwdAfterCheck(tokenMatch.iat); // ACCES FORBIDDEN
+          isChanged = user.changedPwdAfterCheck(_tokenMatch2.iat); // ACCES FORBIDDEN
 
           if (!isChanged) {
             _context5.next = 16;
