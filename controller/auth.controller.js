@@ -104,16 +104,20 @@ export const checkLogin = async (req, res, next) => {
         // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
 
+        if(!user) {
+            return res.status(401).json({
+                status: "Session expired or invalid",
+                message: "Session expired, please log in",
+            });
+        }
+        // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
+        const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
+
         return res.status(200).json({
             status: 200,
-            data: user
+            data: isChanged
         });
 
-        // if(!user) {
-        //     return next(new AppError("Session expired, please log in again.", 401));
-        // }
-        // // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
-        // const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
         // // ACCES FORBIDDEN
         // if(isChanged) {
         //     return next(new AppError("User recently changed password, please log in again!", 401));
