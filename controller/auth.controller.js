@@ -72,12 +72,21 @@ export const login = async (req, res, next) => {
 }
 
 export const checkLogin = async (req, res, next) => {
-    if(!req?.cookie?.jwt) {
+    let token = null;
+    // GET THE JWT TOKEN AND CHECK IT
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    }  else if ( req.cookies.jwt ) {
+        token = req.cookies.jwt;
+    }
+
+    if(!token) {
         return next(new AppError("You are not logged in, please login to get access...", 401));
     }
+
     // GET THE JWT TOKEN AND CHECK IT
-    if(req.cookies.jwt) {
-        const tokenMatch = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET_TOKEN, {
+    try {
+        const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });
 
@@ -98,6 +107,12 @@ export const checkLogin = async (req, res, next) => {
             return next(new AppError("User recently changed password, please log in again!", 401));
         }
         createToken(user, 200, "Token verified!", res);
+    }
+    catch(err) {
+        return res.status(500).json({
+            status: "Bad request",
+            message: "Invalid session, please log in again...",
+        });
     }
 }
 
