@@ -90,7 +90,10 @@ export const checkLogin = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });
 
-        console.log(tokenMatch)
+        return res.status(200).json({
+            status: 200,
+            data: tokenMatch
+        });
 
         // if(!tokenMatch) {
         //     return next(new AppError("You are not logged in, your session expired", 401));

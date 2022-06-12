@@ -201,24 +201,10 @@ var checkLogin = function checkLogin(req, res, next) {
           tokenMatch = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
           });
-          console.log(tokenMatch); // if(!tokenMatch) {
-          //     return next(new AppError("You are not logged in, your session expired", 401));
-          // }
-          // // CHECK IF USER STILL EXISTS
-          // const user = await User.findOne({ where: { id: tokenMatch.id } });
-          // if(!user) {
-          //     return next(new AppError("Session expired, please log in again.", 401));
-          // }
-          // // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
-          // const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
-          // // ACCES FORBIDDEN
-          // if(isChanged) {
-          //     return next(new AppError("User recently changed password, please log in again!", 401));
-          // }
-          // createToken(user, 200, "Token verified!", res);
-
-          _context3.next = 12;
-          break;
+          return _context3.abrupt("return", res.status(200).json({
+            status: 200,
+            data: tokenMatch
+          }));
 
         case 9:
           _context3.prev = 9;

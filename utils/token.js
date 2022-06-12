@@ -12,9 +12,6 @@ const signToken = (id) => {
 // CREATE TOKEN AND HTTP ONLY COOKIE.
 const createToken = (user, statusCode, message, res) => {
     const token = signToken(user.id);
-
-    console.log(process.env.NODE_ENV)
-
     // GENERATE HTTP_ONLY COOCKIE FOR CLIENT SIDE
     res.cookie('jwt', token, {
         httpOnly: true,
