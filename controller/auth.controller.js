@@ -84,7 +84,7 @@ export const checkLogin = async (req, res, next) => {
         // return next(new AppError("You are not logged in, please login to get access...", 401));
         return res.status(401).json({
             status: "Session expired or invalid",
-            message: "You are not logged in, please login to get access...",
+            message: "Session expired, please log in",
         });
     }
 
@@ -94,17 +94,20 @@ export const checkLogin = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });
 
+        if(!tokenMatch) {
+            return res.status(401).json({
+                status: "Session expired or invalid",
+                message: "Session expired, please log in",
+            });
+        }
+
+        // CHECK IF USER STILL EXISTS
+        const user = await User.findOne({ where: { id: tokenMatch.id } });
+
         return res.status(200).json({
             status: 200,
-            data: tokenMatch
+            data: user
         });
-
-        // if(!tokenMatch) {
-        //     return next(new AppError("You are not logged in, your session expired", 401));
-        // }
-
-        // // CHECK IF USER STILL EXISTS
-        // const user = await User.findOne({ where: { id: tokenMatch.id } });
 
         // if(!user) {
         //     return next(new AppError("Session expired, please log in again.", 401));
