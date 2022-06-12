@@ -81,10 +81,9 @@ export const checkLogin = async (req, res, next) => {
     }
 
     if(!token) {
-        // return next(new AppError("You are not logged in, please login to get access...", 401));
         return res.status(401).json({
             status: "Session expired or invalid",
-            message: "Session expired, please log in",
+            message: "Session expired - no token found, please log in",
         });
     }
 
@@ -113,16 +112,14 @@ export const checkLogin = async (req, res, next) => {
         // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
         const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
 
-        return res.status(200).json({
-            status: 200,
-            data: isChanged
-        });
-
-        // // ACCES FORBIDDEN
-        // if(isChanged) {
-        //     return next(new AppError("User recently changed password, please log in again!", 401));
-        // }
-        // createToken(user, 200, "Token verified!", res);
+        // ACCES FORBIDDEN
+        if(isChanged) {
+            return res.status(401).json({
+                status: "Session expired or invalid",
+                message: "Current session expired, please log in",
+            });
+        }
+        createToken(user, 200, "Token verified!", res);
     }
     catch(err) {
         return res.status(500).json({
