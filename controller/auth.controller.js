@@ -76,7 +76,7 @@ export const checkLogin = async (req, res, next) => {
     // GET THE JWT TOKEN AND CHECK IT
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         token = req.headers.authorization.split(' ')[1];
-    }  else if ( req.cookies.jwt ) {
+    }  else if (req.cookies.jwt) {
         token = req.cookies.jwt;
     }
 
@@ -90,23 +90,25 @@ export const checkLogin = async (req, res, next) => {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });
 
-        if(!tokenMatch) {
-            return next(new AppError("You are not logged in, your session expired", 401));
-        }
+        console.log(tokenMatch)
 
-        // CHECK IF USER STILL EXISTS
-        const user = await User.findOne({ where: { id: tokenMatch.id } });
+        // if(!tokenMatch) {
+        //     return next(new AppError("You are not logged in, your session expired", 401));
+        // }
 
-        if(!user) {
-            return next(new AppError("Session expired, please log in again.", 401));
-        }
-        // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
-        const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
-        // ACCES FORBIDDEN
-        if(isChanged) {
-            return next(new AppError("User recently changed password, please log in again!", 401));
-        }
-        createToken(user, 200, "Token verified!", res);
+        // // CHECK IF USER STILL EXISTS
+        // const user = await User.findOne({ where: { id: tokenMatch.id } });
+
+        // if(!user) {
+        //     return next(new AppError("Session expired, please log in again.", 401));
+        // }
+        // // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
+        // const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
+        // // ACCES FORBIDDEN
+        // if(isChanged) {
+        //     return next(new AppError("User recently changed password, please log in again!", 401));
+        // }
+        // createToken(user, 200, "Token verified!", res);
     }
     catch(err) {
         return res.status(500).json({

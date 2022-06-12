@@ -176,7 +176,7 @@ var login = function login(req, res, next) {
 exports.login = login;
 
 var checkLogin = function checkLogin(req, res, next) {
-  var token, tokenMatch, user, isChanged;
+  var token, tokenMatch;
   return regeneratorRuntime.async(function checkLogin$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
@@ -201,62 +201,39 @@ var checkLogin = function checkLogin(req, res, next) {
           tokenMatch = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
           });
+          console.log(tokenMatch); // if(!tokenMatch) {
+          //     return next(new AppError("You are not logged in, your session expired", 401));
+          // }
+          // // CHECK IF USER STILL EXISTS
+          // const user = await User.findOne({ where: { id: tokenMatch.id } });
+          // if(!user) {
+          //     return next(new AppError("Session expired, please log in again.", 401));
+          // }
+          // // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
+          // const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
+          // // ACCES FORBIDDEN
+          // if(isChanged) {
+          //     return next(new AppError("User recently changed password, please log in again!", 401));
+          // }
+          // createToken(user, 200, "Token verified!", res);
 
-          if (tokenMatch) {
-            _context3.next = 8;
-            break;
-          }
-
-          return _context3.abrupt("return", next(new _appError["default"]("You are not logged in, your session expired", 401)));
-
-        case 8:
-          _context3.next = 10;
-          return regeneratorRuntime.awrap(User.findOne({
-            where: {
-              id: tokenMatch.id
-            }
-          }));
-
-        case 10:
-          user = _context3.sent;
-
-          if (user) {
-            _context3.next = 13;
-            break;
-          }
-
-          return _context3.abrupt("return", next(new _appError["default"]("Session expired, please log in again.", 401)));
-
-        case 13:
-          // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
-          isChanged = user.changedPwdAfterCheck(tokenMatch.iat); // ACCES FORBIDDEN
-
-          if (!isChanged) {
-            _context3.next = 16;
-            break;
-          }
-
-          return _context3.abrupt("return", next(new _appError["default"]("User recently changed password, please log in again!", 401)));
-
-        case 16:
-          (0, _token["default"])(user, 200, "Token verified!", res);
-          _context3.next = 22;
+          _context3.next = 12;
           break;
 
-        case 19:
-          _context3.prev = 19;
+        case 9:
+          _context3.prev = 9;
           _context3.t0 = _context3["catch"](4);
           return _context3.abrupt("return", res.status(500).json({
             status: "Bad request",
             message: "Invalid session, please log in again..."
           }));
 
-        case 22:
+        case 12:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[4, 19]]);
+  }, null, null, [[4, 9]]);
 };
 
 exports.checkLogin = checkLogin;
