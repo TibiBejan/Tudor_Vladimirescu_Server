@@ -1,14 +1,14 @@
 // =================== Modules Imports =================== //
-import { Sequelize  } from 'sequelize';
+// import { Sequelize  } from 'sequelize';
 import app from './config/express.config.js';
 import envVars from './constants/index.js';
 
 // =================== DB Init =================== //
-const sequelize = new Sequelize(envVars.MYSQL_DB_NAME, envVars.MYSQL_USER, envVars.MYSQL_PWD, {
-    host: envVars.MYSQL_HOST,
-    dialect: 'mysql',
-    port: 3306,
-});
+// const sequelize = new Sequelize(envVars.MYSQL_DB_NAME, envVars.MYSQL_USER, envVars.MYSQL_PWD, {
+//     host: envVars.MYSQL_HOST,
+//     dialect: 'mysql',
+//     port: 3306,
+// });
 
 // =================== Server Init =================== //
 const port = envVars.port || 3001
