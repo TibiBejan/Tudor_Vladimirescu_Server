@@ -14,11 +14,11 @@ import envVars from './constants/index.js';
 const port = envVars.port || 3001
 app.listen(port, async () => {
     console.log(`Server App running on ${envVars.env} mode with port ${port || '3001'}...`);
-    try {
-        await sequelize.authenticate();
-        // await sequelize.sync({force: true})
-        console.log('Connection has been established successfully.');
-    } catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
+    // try {
+    //     await sequelize.authenticate();
+    //     // await sequelize.sync({force: true})
+    //     console.log('Connection has been established successfully.');
+    // } catch (error) {
+    //     console.error('Unable to connect to the database:', error);
+    // }
 });

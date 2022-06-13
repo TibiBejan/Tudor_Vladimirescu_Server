@@ -4,7 +4,7 @@ config();
 
 // GENERATE JWT TOKEN
 const signToken = (id) => {
-    return jwt.sign({ id: id }, process.env.JWT_SECRET_TOKEN, {
+    return jwt.sign({ id }, process.env.JWT_SECRET_TOKEN, {
         expiresIn: process.env.JWT_EXPIRES_DATE
     });
 }
@@ -16,8 +16,11 @@ const createToken = (user, statusCode, message, res) => {
     res.cookie('jwt', token, {
         httpOnly: true,
         expires: new Date(Date.now() + process.env.JWT_EXPIRES_COOKIE_IN * 24 * 60 * 60 * 1000),
-        secure: true,
-        sameSite: 'None'
+        // secure: process.env.NODE_ENV === 'production' ? true : false,
+        // sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
+        secure: process.env.NODE_ENV !== 'development',
+        sameSite: "None",
+        path: "/"
     });
 
     return res.status(statusCode).json({
