@@ -14,7 +14,11 @@ const app = express()
 
 // =================== Global Middlewares =================== //
 app.use(cors({
-    origin: "https://tudor-vladimirescu.netlify.app"
+    "origin": "https://tudor-vladimirescu.netlify.app",
+    "optionsSuccessStatus": 200,
+    "credentials": true,
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "allowedHeaders":  ['X-Requested-With', 'content-type']
 }));
 app.use(helmet());
 app.use(bodyParser.json());
@@ -22,21 +26,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('combined'));
 
-// Cors
-app.all('/', function(req, res, next) {
-    // res.header("Access-Control-Allow-Origin", "https://tudor-vladimirescu.netlify.app");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With, content-type");
-    res.header("Access-Control-Allow-Credentials", 'true');
-    next();
-});
+// // Cors
+// app.all('/', function(req, res, next) {
+//     // res.header("Access-Control-Allow-Origin", "https://tudor-vladimirescu.netlify.app");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With, content-type");
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     next();
+// });
 
-app.use((req, res, next) => {
-    if (req.method === "OPTIONS") {
-      res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-      return res.status(200).json({});
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     if (req.method === "OPTIONS") {
+//       res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+//       return res.status(200).json({});
+//     }
+//     next();
+// });
 
 // This middleware takes care of the origin when the origin is undefined. Origin is undefined when request is local
 app.use((req, _, next) => {
