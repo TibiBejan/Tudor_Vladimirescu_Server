@@ -75,14 +75,6 @@ export const checkLogin = async (req, res, next) => {
     // GET THE JWT TOKEN AND CHECK IT
     try {
         const token = req.cookies.jwt;
-
-        // // GET THE JWT TOKEN AND CHECK IT
-        // if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        //     token = req.headers.authorization.split(' ')[1];
-        // }  else if (req.cookies.jwt) {
-        //     token = req.cookies.jwt;
-        // }
-    
         if(!token) {
             return res.status(401).json({
                 status: "Session expired or invalid",
