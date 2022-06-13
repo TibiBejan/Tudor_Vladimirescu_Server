@@ -4,7 +4,7 @@ config();
 
 // GENERATE JWT TOKEN
 const signToken = (id) => {
-    return jwt.sign(id, process.env.JWT_SECRET_TOKEN, {
+    return jwt.sign({id: id}, process.env.JWT_SECRET_TOKEN, {
         expiresIn: process.env.JWT_EXPIRES_DATE
     });
 }
