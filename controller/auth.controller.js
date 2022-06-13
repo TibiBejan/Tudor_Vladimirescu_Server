@@ -72,23 +72,24 @@ export const login = async (req, res, next) => {
 }
 
 export const checkLogin = async (req, res, next) => {
-    let token = null;
-    // GET THE JWT TOKEN AND CHECK IT
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        token = req.headers.authorization.split(' ')[1];
-    }  else if (req.cookies.jwt) {
-        token = req.cookies.jwt;
-    }
-
-    if(!token) {
-        return res.status(401).json({
-            status: "Session expired or invalid",
-            message: "Session expired - no token found, please log in",
-        });
-    }
-
     // GET THE JWT TOKEN AND CHECK IT
     try {
+        const token = req.cookies.jwt;
+
+        // // GET THE JWT TOKEN AND CHECK IT
+        // if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        //     token = req.headers.authorization.split(' ')[1];
+        // }  else if (req.cookies.jwt) {
+        //     token = req.cookies.jwt;
+        // }
+    
+        if(!token) {
+            return res.status(401).json({
+                status: "Session expired or invalid",
+                message: "Session expired - no token found, please log in",
+            });
+        }
+
         const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });

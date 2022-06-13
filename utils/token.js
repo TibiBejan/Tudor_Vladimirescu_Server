@@ -3,15 +3,15 @@ import { config } from 'dotenv';
 config();
 
 // GENERATE JWT TOKEN
-const signToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET_TOKEN, {
+const signToken = (user) => {
+    return jwt.sign(user, process.env.JWT_SECRET_TOKEN, {
         expiresIn: process.env.JWT_EXPIRES_DATE
     });
 }
 
 // CREATE TOKEN AND HTTP ONLY COOKIE.
 const createToken = (user, statusCode, message, res) => {
-    const token = signToken(user.id);
+    const token = signToken(user);
     // GENERATE HTTP_ONLY COOCKIE FOR CLIENT SIDE
     res.cookie('jwt', token, {
         httpOnly: true,
