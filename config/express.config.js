@@ -13,7 +13,9 @@ import routes from '../routes/index.js';
 const app = express()
 
 // =================== Global Middlewares =================== //
-app.use(cors());
+app.use(cors({
+    origin: "https://tudor-vladimirescu.netlify.app"
+}));
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
@@ -22,7 +24,7 @@ app.use(morgan('combined'));
 
 // Cors
 app.all('/', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "https://tudor-vladimirescu.netlify.app");
+    // res.header("Access-Control-Allow-Origin", "https://tudor-vladimirescu.netlify.app");
     res.header("Access-Control-Allow-Headers", "X-Requested-With, content-type");
     res.header("Access-Control-Allow-Credentials", 'true');
     next();
