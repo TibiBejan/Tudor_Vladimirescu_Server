@@ -9,7 +9,6 @@ export const getAllRelatives = async (req, res, next) => {
     try {
         const relatives = await Relatives.findAll({ where: { userId: req.user.id } }); 
 
-        console.log(relatives)
         if(!relatives || relatives.length === 0) {
             return next(new AppError("There are no relatives related to this user.", 400));
         }
@@ -63,10 +62,12 @@ export const createRelatives = async (req, res, next) => {
             phone_number,
             userId: req.user.id
         });
+
+        const relatives = await Relatives.findAll({ where: { userId: req.user.id } })
         return res.status(201).json({
             status: "success",
             message: "Relative created!",
-            data: newRelatives
+            data: relatives
         });
     }
     catch(err) {

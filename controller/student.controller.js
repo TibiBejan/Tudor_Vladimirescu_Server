@@ -9,7 +9,7 @@ export const getStudentMeta = async (req, res, next) => {
     try {
         const studentMeta = await StudentMeta.findOne({ where: { userId: req.user.id } }); 
         if(!studentMeta) {
-            return next(new AppError("There is no meta information related to this user.", 400));
+            return next(new AppError("At the moment, there is no personal information defined for your account.", 400));
         }
         return res.status(200).json({
             status: "success",
@@ -27,7 +27,7 @@ export const getStudentMeta = async (req, res, next) => {
 export const createStudentMeta = async (req, res, next) => {
     const { username, dob, gender, nationality, phone_number, street_adress, city, state, country, zip_code } = req.body;
     try {
-        let studentMeta = await StudentMeta.findOne({where: { userId: req.user.id }});
+        let studentMeta = await StudentMeta.findOne({where: { userId: req.user.id, username: req.body.username }});
         if(studentMeta) {
             return next(new AppError("You already defined your meta information, plase use update route to modify", 400));
         }
@@ -61,14 +61,14 @@ export const createStudentMeta = async (req, res, next) => {
 export const updateStudentMeta = async (req, res, next) => {
     try{
         // FILTER BODY AND UPDATE SPECIFIC FIELDS
-        const filteredBody = filterObjectEntries(req.body, 'username', 'dob', 'gsender', 'nationality', 'phone_number', 'street_adress', 'city', 'state', 'country', 'zip_code');
+        const filteredBody = filterObjectEntries(req.body, 'username', 'dob', 'gender', 'nationality', 'phone_number', 'street_adress', 'city', 'state', 'country', 'zip_code');
         // FIND THE USER AND UPDATE INFO
-        const currentStudentMeta = await StudentMeta.findOne({where: { id: req.params.id }});
+        const currentStudentMeta = await StudentMeta.findOne({where: { username: req.params.username }});
         if(!currentStudentMeta) {
             return next(new AppError("This meta information can not be updated, please try again.", 400));
         }
-        const updateMeta = await StudentMeta.update(filteredBody, {where: { id: req.params.id}});
-        const updatedStudentMeta = await StudentMeta.findOne({where: {id: req.params.id}})
+        const updateMeta = await StudentMeta.update(filteredBody, {where: { username: req.params.username }});
+        const updatedStudentMeta = await StudentMeta.findOne({where: {username: req.body.username}});
         // JSON RESPONSE WITH UPDATED KIN
         return res.status(200).json({
             status: "Success",
@@ -78,7 +78,7 @@ export const updateStudentMeta = async (req, res, next) => {
     }
     catch(err) {
         return res.status(500).json({
-            status: "Bad Request",
+            status: 500,
             message: "There is an error updating your info, please try again..."
         });
     }
@@ -86,7 +86,7 @@ export const updateStudentMeta = async (req, res, next) => {
 
 export const deleteStudentMeta = async (req, res, next) => {
     try {
-        const currentStudentMeta = await StudentMeta.findOne({ where: {id: req.params.id}});
+        const currentStudentMeta = await StudentMeta.findOne({ where: {username: req.params.username}});
 
         if(!currentStudentMeta) {
             return next(new AppError("This meta information can not be deleted, please try again.", 400));

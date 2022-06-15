@@ -17,7 +17,7 @@ studentRouter.use(protect);
 // =================== Routes =================== //
 studentRouter.get('/profile', getStudentMeta);
 studentRouter.post('/profile', createStudentMetaSchema, validateRequest, createStudentMeta);
-studentRouter.patch('/profile/:id', updateStudentMetaSchema, validateRequest, updateStudentMeta);
-studentRouter.delete('/profile/:id', deleteStudentMeta);
+studentRouter.patch('/profile/:username', updateStudentMetaSchema, validateRequest, updateStudentMeta);
+studentRouter.delete('/profile/:username', deleteStudentMeta);
 
 export default studentRouter;
