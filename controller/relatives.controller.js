@@ -72,7 +72,7 @@ export const createRelatives = async (req, res, next) => {
     }
     catch(err) {
         return res.status(500).json({
-            status: "Error",
+            status: 500,
             message: "Internal Server Error - Please try again..."
         });
     }
