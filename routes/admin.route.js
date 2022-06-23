@@ -26,7 +26,7 @@ adminRouter.post('/users', createUserSchema, validateRequest, createUser);
 adminRouter.patch('/users/:id', updateUserSchema, validateRequest, updateUser);
 adminRouter.delete('/users/:id', deleteUser);
 adminRouter.patch('/users/:id/password', validateRequest, updatePwd);
-adminRouter.get('/users-accommodated', getAccommodatedUser); // not working
-adminRouter.get('/students-neighbors', getStudentNeighbors); // not working
+adminRouter.get('/users/accommodated/:id', getAccommodatedUser); // not working
+adminRouter.get('/users/neighbors/:id', getStudentNeighbors); // not working
 
 export default adminRouter;

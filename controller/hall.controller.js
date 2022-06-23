@@ -66,7 +66,10 @@ export const updateHall = async (req, res, next) => {
             }
         });
 
-        const hallToUpdate = await Hall.update(filteredBody, {where: { hall_name: req.params.hall_name }})
+        const hallToUpdate = await Hall.update(
+            filteredBody, 
+            {where: { hall_name: req.params.hall_name }}
+        )
         const updatedHall = await Hall.findOne({ 
             where: { hall_name: req.params.hall_name },
         });

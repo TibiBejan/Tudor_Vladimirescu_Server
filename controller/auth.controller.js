@@ -15,25 +15,20 @@ export const signUp = async (req, res, next) => {
     try {
         let { first_name, last_name, email, password } = req.body;
         const existedUser = await User.findOne({where: { email: email }});
-
         if(existedUser) {
             return res.status(500).json({
                 status: httpStatus[500],
                 message: "E-mail is already taken, please try again with another one",
             });
         }
-        // HASH PASSWORD
         const salt = await bcrypt.genSalt(12);
         const hashedPassword = await bcrypt.hash(password, salt);
-
         const newUser = await User.create({
             first_name: first_name,
             last_name: last_name,
             email: email,
             password: hashedPassword
         });
-
-        // CREATE TOKEN FOR REGISTERED USER
         createToken(newUser, 201, "User created!", res);
     }
     catch(err) {
@@ -47,32 +42,28 @@ export const signUp = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
     const { email, password } = req.body;
-    // CHECK IF EMAIL AND PASSWORD EXISTS
     if(!email || !password) {
         return next(new AppError("Please provide email and password, then try again...", 400));
     }
     try {  
-        // CHECK IF USER EXISTS && PASSWORD / EMAIL IS CORRECT
         const user = await User.findOne({ 
             where: { email: email }
         });
         if(!user || (!await user.checkPwdValidation(password, user.password))) {
             return next(new AppError("Incorect email or password, please try again...", 401));
         }
-        // IF EVERYTHING IS OK, SEND JWT TOKEN TO CLIENT
         createToken(user, 201, "User logged in!", res);
     }
     catch(err) {
         return res.status(500).json({
             status: httpStatus[500],
             message: "Internal Server Error - Please try again...",
-            err: process.env.NODE_ENV === 'development' ? err : null
+            err
         });
     } 
 }
 
 export const checkLogin = async (req, res, next) => {
-    // GET THE JWT TOKEN AND CHECK IT
     try {
         const token = req.cookies.jwt;
         if(!token) {
@@ -81,31 +72,23 @@ export const checkLogin = async (req, res, next) => {
                 message: "Session expired - no token found, please log in",
             });
         }
-
         const tokenMatch = jwt.verify(token, process.env.JWT_SECRET_TOKEN, {
             expiresIn: process.env.JWT_EXPIRES_DATE
         });
-
         if(!tokenMatch) {
             return res.status(401).json({
                 status: "Session expired or invalid",
                 message: "Session expired, please log in",
             });
         }
-
-        // CHECK IF USER STILL EXISTS
         const user = await User.findOne({ where: { id: tokenMatch.id } });
-
         if(!user) {
             return res.status(401).json({
                 status: "Session expired or invalid",
                 message: "Session expired, please log in",
             });
         }
-        // CHECK IF USER CHANGED PASSWORD AFTER JWT TOKEN WAS GENERATED
         const isChanged = user.changedPwdAfterCheck(tokenMatch.iat);
-
-        // ACCES FORBIDDEN
         if(isChanged) {
             return res.status(401).json({
                 status: "Session expired or invalid",
@@ -128,7 +111,6 @@ export const logout = async (req, res, _) => {
         httpOnly: true,
         secure: false,
     });
-
     res.status(200).json({
         status: 'success',
         message: 'User Logged Out'
@@ -188,7 +170,6 @@ export const protect = async (req, res, next) => {
 
 export const restrictTo = (...roles) => {
     return async (req, res, next) => {
-        // CHECK ROLES AND PERMISSION OF THE USER SENT BT PREV MIDDLEWEAR
         if(!roles.includes(req.user.role)) {
             return next(new AppError("You do not have permission to perform this action...", 403));
         }

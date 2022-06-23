@@ -15,13 +15,13 @@ const app = express()
 // =================== Global Middlewares =================== //
 const whitelist = ["http://localhost:3000", "https://tudor-vladimirescu.netlify.app"]
 app.use(cors({
-    // "origin": "https://tudor-vladimirescu.netlify.app",
-    "origin": (origin, callback) => {
-        if (whitelist.indexOf(origin) !== -1) {
-          callback(null, true)
-        } else {
-          callback(new Error())
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (whitelist.indexOf(origin) === -1) {
+          var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
+          return callback(new Error(msg), false);
         }
+        return callback(null, true);
     },
     "optionsSuccessStatus": 200,
     "credentials": true,
@@ -30,7 +30,7 @@ app.use(cors({
 }));
 app.use(helmet());
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(morgan('combined'));
 

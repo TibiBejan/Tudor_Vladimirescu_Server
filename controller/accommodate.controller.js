@@ -26,7 +26,7 @@ export const getAccommodatedUser = async (req, res, next) => {
             ]
         });
 
-        if(!currentStudent) {
+        if(!currentStudent || !currentStudent.hallId || !currentStudent.HallRoom.number) {
             return next(new AppError("You are not accommodated, please enroll", 404));
         }
 

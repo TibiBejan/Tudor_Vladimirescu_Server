@@ -2,12 +2,14 @@ import { Model } from 'sequelize';
 
 export default (sequelize, DataTypes) => {
   class Hall extends Model {
+    // Method used to establish entities relations with constraints
     static associate({HallStaff, HallRoom, User}) {
         this.hasMany(User, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" })
         this.hasMany(HallStaff, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
         this.hasMany(HallRoom, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
     }
 
+    // Method used to remove the id from the database query response
     toJSON() {
         return { ...this.get(), id: undefined }
     }

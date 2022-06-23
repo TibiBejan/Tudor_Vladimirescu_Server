@@ -24,7 +24,7 @@ userRouter.get('/enrollment', getEnrollment);
 userRouter.post('/enrollment', createEnrollmentSchema, validateRequest, createEnrollment);
 userRouter.patch('/enrollment/:id', updateEnrollmentSchema, validateRequest, updateEnrollemnt);
 userRouter.delete('/enrollment/:id', deleteEnrollment);
-userRouter.get('/allocation', allocateStudent); // not implemented
+userRouter.get('/allocation', allocateStudent);
 
 // =================== Apply Middlewares =================== //
 userRouter.use(protect, restrictTo('admin', 'student'));

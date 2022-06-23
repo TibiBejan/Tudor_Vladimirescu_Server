@@ -8,6 +8,6 @@ const accommodationRouter = Router();
 // =================== Apply Middlewares =================== //
 accommodationRouter.use(protect);
 // =================== Routes =================== //
-accommodationRouter.get('/:id', getAccommodatedUser); // not working
+accommodationRouter.get('/', getAccommodatedUser); // not working
 
 export default accommodationRouter;

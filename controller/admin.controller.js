@@ -206,7 +206,7 @@ export const getAccommodatedUser = async (req, res, next) => {
         return res.status(500).json({
             status: "Error",
             message: "Internal Server Error - Please try again..."
-        });
+        }); 
     }
 }
 
