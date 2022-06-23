@@ -21,7 +21,7 @@ export const getAccommodatedUser = async (req, res, next) => {
                 {
                     model: Hall,
                     where: { id: req.user.hallId },
-                    attributes: ['hall_name', 'total_rooms', 'total_students', 'students_in_room', 'min_grade', 'max_grade']
+                    attributes: ['hall_name', 'hall_number', 'total_rooms', 'total_students', 'students_in_room', 'min_grade', 'max_grade']
                 }
             ]
         });
@@ -33,12 +33,12 @@ export const getAccommodatedUser = async (req, res, next) => {
         const currentStudentNeighbors = await HallRoom.findAll({
             where: {
                 hallId: currentStudent.hallId,
-                room_number: currentStudent.HallRoom.number
+                number: currentStudent.HallRoom.number
             },
             attributes: ['userId'],
         });
 
-        const neighborsArr = currentStudentNeighbors.map((neighbor) => (neighbor.userId));
+        const neighborsArr = currentStudentNeighbors.filter((neighbor) => neighbor.userId !== req.user.id).map((neighbor) => (neighbor.userId));
 
         const fetchedNeighbors = await User.findAll({ 
             where: { id: neighborsArr },
@@ -65,4 +65,3 @@ export const getAccommodatedUser = async (req, res, next) => {
         }); 
     }
 }
-

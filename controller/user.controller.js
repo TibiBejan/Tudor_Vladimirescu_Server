@@ -89,15 +89,15 @@ export const createEnrollment = async (req, res, next) => {
     try {
         // GET DATA FROM REQ
         let { university, year_of_study, type_of_study, grade, financial_type, nationality, student_gender } = req.body;
+        // CHECK IF STUDENT IS ALREADY ENROLLED
+        const isEnrolled = await Enrollment.findOne({ where: { userId: req.user.id } });
+        if(isEnrolled) {
+            return next(new AppError("You are already enrolled, please try to update current enrollment.", 406));
+        }
         // GET UNIVERSITY BASED ON ENROLLMENT
         const studentUniversity = await University.findOne({ where: { title: university } });
         if(!studentUniversity) {
             return next(new AppError("The enrollment can not be done, please try again", 400));
-        }
-        // CHECK IF STUDENT IS ALREADY ENROLLED
-        const isEnrolled = await Enrollment.findOne({ where: { universityId: studentUniversity.id, userId: req.user.id } });
-        if(isEnrolled) {
-            return next(new AppError("You are already enrolled, please try to update current enrollment.", 406));
         }
         const newEnrollment = await Enrollment.create({
             university: university,
@@ -225,13 +225,14 @@ export const allocateStudent = async (req, res, next) => {
             attributes: ['id', 'hall_number', 'hall_name', 'total_rooms', 'total_students', 'students_in_room', 'min_grade', 'max_grade']
         });
         for (const [index, hall] of universityHalls.entries()) {
+            // GET USER BASED ON ENROLLMENT
+            const enrolledUser = await User.findOne({ where: { id: enrollment.userId } });
             const studentsLimit = hall.total_students;
             const roomsLimit = hall.total_rooms;
             // Get all students with current hall id
             const totalStudentsFromHall = await User.count({
-                where: { hallId: hall.id }
+                where: {hallId: hall.id}
             });
-
             // Validate the current hall students number - related to accommodated users in all university halls
             if(totalStudentsFromHall > studentsLimit && index === universityHalls.length - 1) {
                 return next(new AppError("You can not enroll because the limit of students for your university has been reached.", 500));
@@ -240,93 +241,94 @@ export const allocateStudent = async (req, res, next) => {
             if(totalStudentsFromHall >= studentsLimit) {
                 continue; // skip to next hall from current university
             }
+
             // Check if curent student grade validate hall constraints
-            if(enrollment.grade < hall.min_grade || enrollment.grade > hall.max_grade) {
-                continue; 
-            }
+            // if(enrollment.grade < hall.min_grade) {
+            //     continue; 
+            // }
 
             // If there are available spaces in current hall and grade match, enroll student
-            req.user.hallId = hall.id;
-            await req.user.save();
+            enrolledUser.hallId = hall.id;
+            await enrolledUser.save();
 
-            return;
-
-            // // Fetch current user data including Enrollment, using req.user.id
-            // const currentUserToAccommodate = await User.findOne({
-            //     where: {id: req.user.id},
-            //     include: [{
-            //         model: Enrollment,
-            //     }]
-            // });
-            // // Set room rent price hardcoded
-            // let rent = 0;
-            // if(hall.students_in_room === 2) {
-            //     rent = 250;
-            // } else if (hall.students_in_room === 3) {
-            //     rent = 200;
-            // } else {
-            //     rent = 150;
-            // }
-            // // Map all hall rooms
-            // for(let i = 0; i <= roomsLimit; i++) {
-            //     // Set room floor hardcoded
-            //     let floor = 0;
-            //     if(i > 70 && i < 140) {
-            //         floor = 1;
-            //     } else if (i > 140 && i < 210) {
-            //         floor = 2;
-            //     } else if (i > 210 && i < 280) {
-            //         floor = 3
-            //     }
-            //     const currentAllocatedStudent = await HallRoom.findOne({where: {hallId: hall.id, userId: currentUserToAccommodate.id}});
-            //     if(currentAllocatedStudent) {
-            //         return res.status(500).json({status: httpStatus[500],message: `You are already allocated in Hall ${hall.hall_name}`});
-            //     };
-            //     const currentRoomMembers = await HallRoom.findAll({where: {hallId: hall.id, number: i}});
-            //     if(currentRoomMembers.length >= hall.students_in_room) {continue;}
-            //     if(currentRoomMembers.length === 0) {
-            //         const allocateStudentToRoom = await HallRoom.create({
-            //             number: i,
-            //             floor: floor,
-            //             rent_per_month: rent,
-            //             beds_number: hall.students_in_room,
-            //             bathroom: hall.bathroom,
-            //             hallId: currentUserToAccommodate.hallId,
-            //             userId: currentUserToAccommodate.id
-            //         });
-            //         return res.status(200).json({status: "success", message: "Student has been allocated!"});
-            //     }
-            //     if(currentRoomMembers.length < hall.students_in_room) {
-            //         const existingStudentsInRoom = await HallRoom.findAll({
-            //             where: {hallId: hall.id,room_number: i},
-            //             include: [{model: User,include: Enrollment}],
-            //         });
-            //         let isMatch = false;
-            //         if(existingStudentsInRoom) {
-            //             existingStudentsInRoom.forEach((s) => {
-            //                 if(s.User.Enrollment.student_gender === currentUserToAccommodate.Enrollment.student_gender) {
-            //                     isMatch = true;
-            //                 } else {
-            //                     isMatch = false;
-            //                 }
-            //             });
-            //             if(isMatch) {
-            //                 const allocateStudentToRoom = await HallRoom.create({
-            //                     number: i,
-            //                     floor: floor,
-            //                     rent_per_month: rent,
-            //                     beds_number: hall.students_in_room,
-            //                     bathroom: hall.bathroom,
-            //                     hallId: currentUserToAccommodate.hallId,
-            //                     userId: currentUserToAccommodate.id
-            //                 });
+            // Fetch current user data including Enrollment, using req.user.id
+            const currentUserToAccommodate = await User.findOne({
+                where: {id: req.user.id},
+                include: [{
+                    model: Enrollment,
+                }]
+            });
+            // Set room rent price hardcoded
+            let rent = 0;
+            if(hall.students_in_room === 2) {
+                rent = 250;
+            } else if (hall.students_in_room === 3) {
+                rent = 200;
+            } else {
+                rent = 150;
+            }
+            // Map all hall rooms
+            for(let i = 0; i <= roomsLimit; i++) {
+                // Set room floor hardcoded
+                let floor = 0;
+                if(i > 70 && i < 140) {
+                    floor = 1;
+                } else if (i > 140 && i < 210) {
+                    floor = 2;
+                } else if (i > 210 && i < 280) {
+                    floor = 3
+                }
+                const currentAllocatedStudent = await HallRoom.findOne({where: {hallId: hall.id, userId: currentUserToAccommodate.id}});
+                if(currentAllocatedStudent) {
+                    return res.status(500).json({status: 'Fail', message: `You are already allocated in Hall ${hall.hall_name}`});
+                };
+                const currentRoomMembers = await HallRoom.findAll({where: {hallId: hall.id, number: i}});
+                if(currentRoomMembers.length >= hall.students_in_room) {
+                    continue;
+                }
+                if(currentRoomMembers.length === 0) {
+                    const allocateStudentToRoom = await HallRoom.create({
+                        number: i+1,
+                        floor: floor,
+                        rent_per_month: rent,
+                        beds_number: hall.students_in_room,
+                        bathroom: hall.bathroom,
+                        hallId: currentUserToAccommodate.hallId,
+                        userId: currentUserToAccommodate.id
+                    });
+                    return res.status(200).json({status: "success", message: "Student has been allocated!"});
+                }
+                if(currentRoomMembers.length < hall.students_in_room) {
+                    const existingStudentsInRoom = await HallRoom.findAll({
+                        where: {hallId: hall.id, number: i},
+                        include: [{model: User,include: Enrollment}],
+                    });
+                    let isMatch = false;
+                    if(existingStudentsInRoom) {
+                        existingStudentsInRoom.forEach((s) => {
+                            if(s.User.Enrollment.student_gender === currentUserToAccommodate.Enrollment.student_gender) {
+                                isMatch = true;
+                            } else {
+                                isMatch = false;
+                            }
+                        });
+                        if(isMatch) {
+                            const allocateStudentToRoom = await HallRoom.create({
+                                number: i,
+                                floor: floor,
+                                rent_per_month: rent,
+                                beds_number: hall.students_in_room,
+                                bathroom: hall.bathroom,
+                                hallId: currentUserToAccommodate.hallId,
+                                userId: currentUserToAccommodate.id
+                            });
         
-            //                 return res.status(200).json({status: "success", message: "Student has been allocated!"});
-            //             }
-            //             if(!isMatch) {continue;}
-            //         } 
-            //     }
-            // }
+                            return res.status(200).json({status: "success", message: "Student has been allocated!"});
+                        }
+                        if(!isMatch) {continue;}
+                    } 
+                }
+            }
         }
     }
     catch(err) {

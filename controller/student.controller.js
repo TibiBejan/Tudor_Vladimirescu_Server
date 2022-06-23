@@ -27,7 +27,7 @@ export const getStudentMeta = async (req, res, next) => {
 export const createStudentMeta = async (req, res, next) => {
     const { username, dob, gender, nationality, phone_number, street_adress, city, state, country, zip_code } = req.body;
     try {
-        let studentMeta = await StudentMeta.findOne({where: { userId: req.user.id, username: req.body.username }});
+        let studentMeta = await StudentMeta.findOne({where: { userId: req.user.id }});
         if(studentMeta) {
             return next(new AppError("You already defined your meta information, plase use update route to modify", 400));
         }
