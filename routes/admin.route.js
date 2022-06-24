@@ -19,13 +19,13 @@ const adminRouter = Router();
 // =================== Apply Middlewares =================== //
 adminRouter.use(protect, restrictTo('admin'));
 // =================== Routes =================== //
-adminRouter.get('/users-query', getUsersByQuerry); // not working
+adminRouter.get('/users-query', getUsersByQuerry);
 adminRouter.get('/users', getAllUsers);
 adminRouter.get('/users/:id', getUser);
 adminRouter.post('/users', createUserSchema, validateRequest, createUser);
-adminRouter.patch('/users/:id', updateUserSchema, validateRequest, updateUser);
-adminRouter.delete('/users/:id', deleteUser);
-adminRouter.patch('/users/:id/password', validateRequest, updatePwd);
+adminRouter.patch('/users/:email', updateUserSchema, validateRequest, updateUser);
+adminRouter.delete('/users/:email', deleteUser);
+adminRouter.patch('/users/:email/password', validateRequest, updatePwd);
 adminRouter.get('/users/accommodated/:id', getAccommodatedUser); // not working
 adminRouter.get('/users/neighbors/:id', getStudentNeighbors); // not working
 

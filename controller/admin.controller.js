@@ -10,9 +10,6 @@ const { User, Enrollment, Hall, HallRoom } = dbModels;
 export const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.findAll({
-            where: {
-                role: 'student',
-            },
             include: [{
                 model: Enrollment
             }],
@@ -29,7 +26,7 @@ export const getAllUsers = async (req, res, next) => {
         return res.status(200).json({
             status: "success",
             message: 'Users Fetched',
-            students: users
+            students: users.filter(user => user.email !== req.user.email)
         });
     }
     catch(err) {
@@ -297,16 +294,16 @@ export const createUser = async (req, res, next) => {
 }
 
 export const updateUser = async (req, res, next) => {
-    const targetId = req.params.id;
+    const targetEmail = req.params.email;
     try {
-        const user = await User.findOne({where: {id: targetId}});
+        const user = await User.findOne({where: {email: targetEmail}});
 
         if(!user) {
             return next(new AppError("User not found.", 404));
         }
         // FILTER BODY AND UPDATE SPECIFIC FIELDS
         const filteredBody = filterObjectEntries(req.body, 'first_name', 'last_name', 'email', 'role');
-        const updatedUser = await User.update(filteredBody, {where: { id: targetId }});
+        const updatedUser = await User.update(filteredBody, {where: { email: targetEmail }});
 
         return res.status(200).json({
             status: "success",
@@ -322,9 +319,9 @@ export const updateUser = async (req, res, next) => {
 }
 
 export const updatePwd = async (req, res, next) => {
-    const targetId = req.params.id;
+    const targetEmail = req.params.email;
     try {
-        const user = await User.findOne({where: {id: targetId}});
+        const user = await User.findOne({where: {email: targetEmail}});
         if(!user) {
             return next(new AppError("User not found.", 404));
         }
@@ -355,9 +352,9 @@ export const updatePwd = async (req, res, next) => {
 }
 
 export const deleteUser = async (req, res, next) => {
-    const targetId = req.params.id;
+    const targetEmail = req.params.email;
     try {
-        const user = await User.findOne({where: { id: targetId}});
+        const user = await User.findOne({where: { email: targetEmail}});
         if(!user) {
             return next(new AppError("User not found", 404));
         }
