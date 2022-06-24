@@ -15,7 +15,7 @@ const app = express()
 // =================== Global Middlewares =================== //
 const whitelist = ["http://localhost:3000", "https://tudor-vladimirescu.netlify.app"]
 app.use(cors({
-    origin: function (origin, callback) {
+    "origin": function (origin, callback) {
         if(!origin) return callback(null, true);    
         
         if(whitelist.indexOf(origin) === -1){
