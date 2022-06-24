@@ -16,12 +16,11 @@ const app = express()
 const whitelist = ["http://localhost:3000", "https://tudor-vladimirescu.netlify.app"]
 app.use(cors({
     "origin": function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (whitelist.indexOf(origin) === -1) {
-          var msg = `This site ${origin} does not have an access. Only specific domains are allowed to access it.`;
-          return callback(new Error(msg), false);
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
         }
-        return callback(null, true);
     },
     "optionsSuccessStatus": 200,
     "credentials": true,
