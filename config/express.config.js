@@ -25,10 +25,10 @@ app.use(cors({
         }
         return callback(null, true);
     },
-    "optionsSuccessStatus": 200,
-    "credentials": true,
-    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-    "allowedHeaders":  ['X-Requested-With', 'content-type']
+    optionsSuccessStatus: 200,
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders:  ['X-Requested-With', 'content-type']
 }));
 app.use(helmet());
 app.use(bodyParser.json());
