@@ -25,7 +25,7 @@ app.use(cors({
     //     }
     //     return callback(null, true);
     // },
-    origin: "https://tudor-vladimirescu.netlify.app/",
+    origin: "https://tudor-vladimirescu.netlify.app",
     optionsSuccessStatus: 200,
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
