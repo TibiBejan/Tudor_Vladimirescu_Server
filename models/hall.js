@@ -4,9 +4,12 @@ export default (sequelize, DataTypes) => {
   class Hall extends Model {
     // Method used to establish entities relations with constraints
     static associate({HallStaff, HallRoom, User}) {
-        this.hasMany(User, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" })
-        this.hasMany(HallStaff, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
-        this.hasMany(HallRoom, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
+        // this.hasMany(User, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" })
+        // this.hasMany(HallStaff, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+        // this.hasMany(HallRoom, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+        this.hasMany(User, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" })
+        this.hasMany(HallStaff, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+        this.hasMany(HallRoom, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
 
     // Method used to remove the id from the database query response

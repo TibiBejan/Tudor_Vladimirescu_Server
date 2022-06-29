@@ -4,8 +4,10 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class HallRoom extends Model {
     static associate({Hall, User}) {
-      this.belongsTo(Hall, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
-      this.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
+      // this.belongsTo(Hall, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      // this.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      this.belongsTo(Hall, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      this.belongsTo(User, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   };
 

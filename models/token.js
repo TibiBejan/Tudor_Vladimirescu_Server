@@ -3,7 +3,8 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class Token extends Model {
     static associate({User}) {
-      this.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
+      // this.belongsTo(User, { foreignKey: 'userId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      this.belongsTo(User, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   };
 

@@ -3,7 +3,8 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class University extends Model {
     static associate({Enrollment}) {
-      this.hasMany(Enrollment, { foreignKey: 'universityId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
+      // this.hasMany(Enrollment, { foreignKey: 'universityId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      this.hasMany(Enrollment, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   };
   

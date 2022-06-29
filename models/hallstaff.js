@@ -3,7 +3,8 @@ import { Model } from 'sequelize';
 export default (sequelize, DataTypes) => {
   class HallStaff extends Model {
     static associate({Hall}) {
-      this.belongsTo(Hall, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE" });
+      // this.belongsTo(Hall, { foreignKey: 'hallId', foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
+      this.belongsTo(Hall, { foreignKeyConstraint: true, allowNull: false, onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
 
     toJSON() {
